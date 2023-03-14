@@ -1,0 +1,18 @@
+version: "3.6"
+networks:
+  git:
+services:
+  git: &app
+    hostname: git
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    networks:
+      - git
+    volumes:
+      - "./work:/home/jovyan/work"
+    environment:
+      - USER_NAME=Nikita Eshkeev
+      - USER_EMAIL=neshkeev@yandex.ru
