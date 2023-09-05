@@ -11,14 +11,12 @@
 ```bash
 docker compose up
 ```
-2. Найти в терминале ссылку `http://localhost:8888/lab?token=XXXXX`
-3. Открыть ссылку в браузере
-4. На форме Jupyter Notebook открыть папку `work` и выбрать любой notebook
+2. Открыть ссылку в браузере: `http://localhost:8888/lab?`
+3. На форме Jupyter Notebook открыть папку `work` и выбрать любой notebook
 
 ## Запуск ноутбука
 
-Запустить notebook можно тремя способами
+Запустить notebook можно двумя способами:
 
 1. `docker compose run`
 1. `docker run -p 8888:8888 -v './work:/home/jovyan/work' neshkeev/bash-notebook`
-1. `docker build -t bash-notebook . && docker run -p 8888:8888 -v './work:/home/jovyan/work' bash-notebook`
