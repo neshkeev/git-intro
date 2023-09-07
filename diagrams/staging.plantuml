@@ -1,0 +1,152 @@
+@startuml Статусы файла
+
+participant "Рабочий каталог" as wt
+participant "Индекс" as i
+participant "Репозиторий" as r
+
+wt -> wt : создать hello.txt
+note left #red
+  Добрый день!
+end note
+
+wt -> i : git add hello.txt
+note right #green
+  Добрый день!
+end note
+
+i -> r : git commit
+note right
+  Добрый день!
+end note
+note right of i: <empty>
+note left of wt #green: Добрый день!
+
+wt -> wt : Изменить hello.txt
+note left #FFAAAA
+  Привет!
+  Как дела
+end note
+
+wt -> i : git add hello.txt
+note right #green
+  Привет!
+  Как дела
+end note
+
+note left #green
+  Привет!
+  Как дела
+end note
+
+wt -> wt : Изменить hello.txt
+note left #FFAAAA
+  Привет!
+  Как дела?
+end note
+
+i -> r : git commit
+note right of r
+  Привет!
+  Как дела
+end note
+
+note right of i: <empty>
+
+wt -> i: git add hello.txt
+note right #green
+  Привет!
+  Как дела?
+end note
+
+note left of wt #green
+  Привет!
+  Как дела?
+end note
+
+wt -> wt : Удалить hello.txt
+note left #FFAAAA
+  <empty>
+end note
+
+wt <- r: git checkout HEAD -- hello.txt
+note left of wt
+  Привет!
+  Как дела
+end note
+
+wt <- i : git reset HEAD
+note left of wt #FFAAAA
+  Привет!
+  Как дела?
+end note
+
+note right of i
+  <empty>
+end note
+
+wt -> i: git add hello.txt
+note right #green
+  Привет!
+  Как дела?
+end note
+
+note left of wt #green
+  Привет!
+  Как дела?
+end note
+
+wt -> wt : Удалить hello.txt
+note left #FFAAAA
+  <empty>
+end note
+
+i -> r : git commit
+note right
+  Привет!
+  Как дела?
+end note
+
+note right of i: <empty>
+
+wt <- r: git checkout HEAD -- hello.txt
+note left of wt
+  Привет!
+  Как дела?
+end note
+
+wt -> wt: изменить hello.txt
+note left #FFAAAA
+  Приветствую!
+  Как дела???
+end note
+
+wt -> i : git add hello.txt
+note right #green
+  Приветствую!
+  Как дела???
+end note
+
+wt -> wt : удалить hello.txt
+note left #FFAAAA
+  <empty>
+end note
+
+i -> r : git commit
+note left of i
+  <empty>
+end note
+
+note right
+  Приветствую!
+  Как дела???
+end note
+note left of wt #FFAAAA
+  <empty>
+end note
+
+wt <- r: git checkout HEAD -- hello.txt
+note left of wt
+  Приветствую!
+  Как дела???
+end note
+@enduml
