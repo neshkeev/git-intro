@@ -4,149 +4,257 @@ participant "Рабочий каталог" as wt
 participant "Индекс" as i
 participant "Репозиторий" as r
 
-wt -> wt : создать hello.txt
-note left #red
-  Добрый день!
-end note
+group Создать файл hello.txt
 
-wt -> i : git add hello.txt
-note right #green
-  Добрый день!
-end note
+  wt -> wt : создать hello.txt
+  note left #B85450
+    Добрый день!
+  end note
 
-i -> r : git commit
-note right
-  Добрый день!
-end note
-note right of i: <empty>
-note left of wt #green: Добрый день!
+  group Подготовить изменения для фиксации
 
-wt -> wt : Изменить hello.txt
-note left #FFAAAA
-  Привет!
-  Как дела
-end note
+    wt -> i : git add hello.txt
+    note right #green
+      Добрый день!
+    end note
 
-wt -> i : git add hello.txt
-note right #green
-  Привет!
-  Как дела
-end note
+    note left of wt
+      Добрый день!
+    end note
+  end
 
-note left #green
-  Привет!
-  Как дела
-end note
+  group Зафиксировать подготовленные изменения
+    i -> r : git commit
+    note right
+      Добрый день!
+    end note
+
+    note right of i: <empty>
+  end
+end
 
 wt -> wt : Изменить hello.txt
-note left #FFAAAA
-  Привет!
-  Как дела?
-end note
 
-i -> r : git commit
-note right of r
+activate wt #FFAAAA
+
+note left #FFAAAA
   Привет!
   Как дела
 end note
 
-note right of i: <empty>
+group Подготовить изменения для фиксации
 
-wt -> i: git add hello.txt
-note right #green
+  wt -> i : git add hello.txt
+  note right #green
+    Привет!
+    Как дела
+  end note
+  deactivate wt
+
+  activate i #green
+
+  note left of wt
+    Привет!
+    Как дела
+  end note
+end
+
+wt -> wt : Изменить hello.txt
+activate wt #FFAAAA
+
+note left #FFAAAA
   Привет!
   Как дела?
 end note
 
-note left of wt #green
-  Привет!
-  Как дела?
-end note
+group Зафиксировать состояние индекса
+  i -> r : git commit
+
+  deactivate i
+
+  note right of r
+    Привет!
+    Как дела
+  end note
+
+  note right of i: <empty>
+end
+
+group Отменить изменения
+  group Подготовить изменения для фиксации
+
+    wt -> i: git add hello.txt
+
+    deactivate wt
+
+    note right #green
+      Привет!
+      Как дела?
+    end note
+
+    activate i #green
+
+    note left of wt
+      Привет!
+      Как дела?
+    end note
+  end
+
+  wt -> wt : Удалить hello.txt
+
+  activate wt #FFAAAA
+
+  note left #FFAAAA
+    <empty>
+  end note
+
+group Восстановить зафиксированную версию
+  wt <- r: git checkout HEAD -- hello.txt
+  deactivate wt
+  note left of wt
+    Привет!
+    Как дела
+  end note
+end
+
+group Восстановить изменения из индекса
+  wt <- i : git reset HEAD hello.txt
+  note left of wt #FFAAAA
+    Привет!
+    Как дела?
+  end note
+
+  activate wt #FFAAAA
+
+  deactivate i
+
+  note right of i
+    <empty>
+  end note
+
+end
+
+group Подготовить изменения к фиксации
+  wt -> i: git add hello.txt
+
+  deactivate wt
+
+  note right #green
+    Привет!
+    Как дела?
+  end note
+
+  activate i #green
+
+  note left of wt
+    Привет!
+    Как дела?
+  end note
+end
 
 wt -> wt : Удалить hello.txt
+
+activate wt #FFAAAA
+
 note left #FFAAAA
   <empty>
 end note
 
-wt <- r: git checkout HEAD -- hello.txt
-note left of wt
-  Привет!
-  Как дела
-end note
+group Зафиксировать подготовленные изменения
+  i -> r : git commit
+  note right
+    Привет!
+    Как дела?
+  end note
 
-wt <- i : git reset HEAD
-note left of wt #FFAAAA
-  Привет!
-  Как дела?
-end note
+  deactivate i
 
-note right of i
-  <empty>
-end note
+  note right of i: <empty>
+end
 
-wt -> i: git add hello.txt
-note right #green
-  Привет!
-  Как дела?
-end note
+group Восстановить зафиксированную версию
+  wt <- r: git checkout HEAD -- hello.txt
 
-note left of wt #green
-  Привет!
-  Как дела?
-end note
+  deactivate wt
 
-wt -> wt : Удалить hello.txt
-note left #FFAAAA
-  <empty>
-end note
-
-i -> r : git commit
-note right
-  Привет!
-  Как дела?
-end note
-
-note right of i: <empty>
-
-wt <- r: git checkout HEAD -- hello.txt
-note left of wt
-  Привет!
-  Как дела?
-end note
+  note left of wt
+    Привет!
+    Как дела?
+  end note
+end
 
 wt -> wt: изменить hello.txt
+
+activate wt #FFAAAA
+
 note left #FFAAAA
   Приветствую!
   Как дела???
 end note
 
-wt -> i : git add hello.txt
-note right #green
-  Приветствую!
-  Как дела???
-end note
+group Подготовить изменения к фиксации
+  wt -> i : git add hello.txt
+  deactivate wt
+  note right #green
+    Приветствую!
+    Как дела???
+  end note
 
-wt -> wt : удалить hello.txt
-note left #FFAAAA
-  <empty>
-end note
+  activate i #green
 
-i -> r : git commit
-note left of i
-  <empty>
-end note
+  note left of wt
+    Приветствую!
+    Как дела???
+  end note
+end
 
-note right
-  Приветствую!
-  Как дела???
-end note
-note left of wt #FFAAAA
-  <empty>
-end note
+group Зафиксировать подготовленные изменения
+  i -> r : git commit
 
-wt <- r: git checkout HEAD -- hello.txt
-note left of wt
-  Приветствую!
-  Как дела???
-end note
+  deactivate i
+ 
+  note right of r
+    Приветствую!
+    Как дела???
+  end note
+
+  note right of i
+    <empty>
+  end note
+end
+
+group Удалить файл hello.txt
+  wt -> wt : удалить hello.txt
+
+  activate wt #FFAAAA
+
+  note left #FFAAAA
+    <empty>
+  end note
+
+  group Подготовить изменения к фиксации
+    wt -> i: git add hello.txt
+
+    deactivate wt
+
+    note right of i #green
+      <empty>
+    end note
+
+    activate i #green
+
+    note left of wt
+      <empty>
+    end note
+  end
+
+  group Зафиксировать подготовленные изменения
+    i -> r : git commit
+    deactivate i
+    note right of r
+      <empty>
+    end note
+  end
+end
+
 @enduml
