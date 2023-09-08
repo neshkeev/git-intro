@@ -6,31 +6,140 @@ networks:
 x-check-ports: &check-ports ./bin/check-ports:/bin/check-ports
 x-service-template: &template
   restart: on-failure
-  networks:
-    - git_network
   healthcheck: &hc
     interval: 5s
     timeout: 3s
     start_period: 10s
     retries: 10
+  networks:
+    - git_network
   volumes:
     - *check-ports
 
+x-public-key: &pub >
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvsMS8epcGP8t7w0gRo9oeX8qsv4gvNeWDLYgBqNh5cNIVkUL4JT58zwO/zC0iS3rFmICCIq4W6Y91DSpBydgAqCsB7Fq1Q3REcZmH/PRprWpkPFLDQie9c+BzUFKOEpXF3gkh3lSjw7YrxLE/YFETwf8oLonwElrytCquCnHucvX8rLN32kEqSbEVkIiK5/LuafzU3R0JvuYaI/O5AX93tWLu0SnFzxsYEhGxQ1FSgKFzYfxGR4R1J05tB4felT9IX2PV9wlM3vOAPAoj/6UIQoBBi8tMkGk4jXRqTWFJBDDew5NCH18G+QshYQ6C4jL24dzsYEG2jVv6VlolNJTp46+et7Tkv9C+zC5i3qUY4fmKYTOaoPP3+3bksxxXIdM1deYVqxaphrvRCFmGW6KfC7jzsGXqKiS3FUF1dRds2X/auX3zwtjvxYk/hJbMN1BKzjvdkPnqTY2YNZFuyTRtv4NOnHedQBwq/h9jIifSV471ApUqBfvAZh46Dr9GXbk= jovyan@buildkitsandbox
+
+x-private-key: &private |+
+  -----BEGIN OPENSSH PRIVATE KEY-----
+  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
+  -----END OPENSSH PRIVATE KEY-----
+
 services:
   manager:
+    <<: *template
     image: neshkeev/bash-notebook
     hostname: &name manager
     container_name: *name
+    command: /usr/local/bin/entrypoint
     healthcheck:
       <<: *hc
       test: bash /bin/check-ports 8888
+    depends_on:
+      dind:
+        condition: service_healthy
     ports:
       - "8888:8888"
     volumes:
       - *check-ports
       - ./work:/home/jovyan/work
+      - ./bin/manager-entrypoint:/usr/local/bin/entrypoint
+      - ./bin/manager.bashrc:/home/jovyan/.bashrc
     environment:
       USER_NAME: Nikita Eshkeev
       USER_EMAIL: neshkeev@yandex.ru
       NOTEBOOK_ARGS: --NotebookApp.token='' --NotebookApp.password=''
       RESTARTABLE: yes
+        # PUBLIC_KEY: *pub
+      PRIVATE_KEY: *private
+      DIND_HOST: dind
+
+  gitlab:
+    <<: *template
+    image: gitlab/gitlab-ce:16.3.2-ce.0
+    hostname: &name gitlab
+    container_name: *name
+    healthcheck:
+      <<: *hc
+      test: /opt/gitlab/bin/gitlab-healthcheck --fail --max-time 10
+      interval: 2m
+      timeout: 30s
+    shm_size: '256m'
+    ports:
+      - "8080:80"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: "from_file('/omnibus_config.rb')"
+    configs:
+      - source: gitlab
+        target: /omnibus_config.rb
+
+  runner:
+    <<: *template
+    image: gitlab/gitlab-runner:alpine3.16-v16.3.0
+    hostname: &name runner
+    container_name: *name
+    healthcheck:
+      <<: *hc
+      test: 'true'
+    depends_on:
+      gitlab:
+        condition: service_healthy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  dind:
+    <<: *template
+    build:
+      context: .
+      dockerfile: local/Dockerfile_dind
+    hostname: &name dind
+    container_name: *name
+    healthcheck:
+      <<: *hc
+      test: sh /bin/check-ports 2222
+    privileged: true
+    volumes:
+      - *check-ports
+      - ./docker-compose.yml:/root/${CURRENT_DIR_NAME:-git-intro}/docker-compose.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      CURRENT_DIR_NAME: ${CURRENT_DIR_NAME:-git-intro}
+      AUTHORIZED_KEYS: *pub
+
+configs:
+  gitlab:
+    file: ./conf/gitlab.rb

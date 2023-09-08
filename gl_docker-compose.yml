@@ -1,0 +1,46 @@
+version: "3.8"
+
+networks:
+  git_network:
+
+    # volumes:
+    #   gitlab-config:
+    #   gitlab-logs:
+    #   gitlab-data:
+    #   gitlab-runner-config:
+
+x-service-template: &template
+  restart: on-failure
+  networks:
+    - git_network
+
+services:
+  gitlab:
+    <<: *template
+    image: gitlab/gitlab-ce:16.3.2-ce.0
+    hostname: &name gitlab
+    container_name: *name
+    shm_size: '256m'
+    healthcheck: null
+    ports:
+      - "8080:80"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: "from_file('/omnibus_config.rb')"
+    configs:
+      - source: gitlab
+        target: /omnibus_config.rb
+
+  runner:
+    <<: *template
+    image: gitlab/gitlab-runner:alpine3.16-v16.3.0
+    hostname: &name runner
+    container_name: *name
+    depends_on:
+      gitlab:
+        condition: service_healthy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+configs:
+  gitlab:
+    file: ./conf/gitlab.rb

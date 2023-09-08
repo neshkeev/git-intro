@@ -1,6 +1,6 @@
 tasks:
   - name: Start Notebook
-    command: docker compose up
+    command: bash ./start
 ports:
   - name: Jupyter Notebook
     port: 8888
