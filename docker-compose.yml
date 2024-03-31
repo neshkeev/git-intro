@@ -30,7 +30,5 @@ services:
       - *check-ports
       - ./work:/home/jovyan/work
     environment:
-      USER_NAME: Nikita Eshkeev
-      USER_EMAIL: neshkeev@yandex.ru
       NOTEBOOK_ARGS: --NotebookApp.token='' --NotebookApp.password=''
       RESTARTABLE: yes
